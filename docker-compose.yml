@@ -42,6 +42,9 @@ services:
       dockerfile: front/Dockerfile
       args:
         NEXT_PUBLIC_API_URL: http://localhost:3333/api
+    environment:
+      # O front chama a API pelo servidor do Next: dentro da rede do compose, pelo nome do serviço.
+      API_URL: http://api:3333/api
     ports:
       - '3000:3000'
     depends_on:
