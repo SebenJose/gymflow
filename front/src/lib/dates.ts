@@ -38,3 +38,23 @@ export function formatTime(isoDateTime: string): string {
 export function businessDayOf(isoDateTime: string): string {
   return businessToday(new Date(isoDateTime));
 }
+
+const MS_PER_DAY = 86_400_000;
+
+/** Soma dias a uma data `YYYY-MM-DD`. */
+export function addDays(isoDate: string, days: number): string {
+  const date = new Date(`${isoDate}T00:00:00Z`);
+  return new Date(date.getTime() + days * MS_PER_DAY).toISOString().slice(0, 10);
+}
+
+const dayLabelFormatter = new Intl.DateTimeFormat('pt-BR', {
+  timeZone: 'UTC',
+  weekday: 'long',
+  day: '2-digit',
+  month: '2-digit',
+});
+
+/** Ex.: "quarta-feira, 25/11" para um dia `YYYY-MM-DD` (sem fuso: o dia já é o da academia). */
+export function formatDayLabel(isoDate: string): string {
+  return dayLabelFormatter.format(new Date(`${isoDate}T12:00:00Z`));
+}

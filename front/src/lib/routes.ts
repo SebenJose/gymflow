@@ -6,6 +6,7 @@ export const ROUTES = {
   plans: '/planos',
   workouts: '/treinos',
   classes: '/aulas',
+  attendance: '/frequencia',
   /** Route Handler que apaga o cookie de um token rejeitado pela API e volta ao login. */
   sessionExpired: '/sessao-expirada',
 } as const;
