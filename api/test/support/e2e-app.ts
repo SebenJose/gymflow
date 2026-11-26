@@ -36,13 +36,25 @@ export async function createE2eApp(): Promise<INestApplication<App>> {
   const dataSource = app.get(DataSource);
   const tables = dataSource.entityMetadatas.map((entity) => `"${entity.tableName}"`).join(', ');
   await dataSource.query(`TRUNCATE TABLE ${tables} CASCADE`);
-  await dataSource.getRepository(User).save({
-    name: ADMIN.name,
-    email: ADMIN.email,
-    passwordHash: await app.get(PasswordHasher).hash(ADMIN.password),
-    role: UserRole.Admin,
-  });
+  await createStaffUser(app, ADMIN, UserRole.Admin);
   return app;
+}
+
+/** Cria instrutor ou admin direto no banco, já que o cadastro público só cria alunos. */
+export async function createStaffUser(
+  app: INestApplication<App>,
+  { name, email, password }: Credentials,
+  role: UserRole.Admin | UserRole.Instructor,
+): Promise<void> {
+  await app
+    .get(DataSource)
+    .getRepository(User)
+    .save({
+      name,
+      email,
+      passwordHash: await app.get(PasswordHasher).hash(password),
+      role,
+    });
 }
 
 export async function login(

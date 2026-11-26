@@ -1,0 +1,10 @@
+export const WORKOUT_NAME_MAX_LENGTH = 80;
+export const WORKOUT_NOTES_MAX_LENGTH = 500;
+export const WORKOUT_MAX_EXERCISES = 30;
+
+export const EXERCISE_NAME_MAX_LENGTH = 80;
+export const EXERCISE_NOTES_MAX_LENGTH = 200;
+export const EXERCISE_MAX_SETS = 20;
+export const EXERCISE_MAX_REPS = 100;
+export const EXERCISE_MAX_LOAD_KG = 1000;
+export const EXERCISE_MAX_REST_SECONDS = 600;
