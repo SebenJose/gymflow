@@ -4,6 +4,7 @@ export const ROUTES = {
   login: '/entrar',
   register: '/cadastro',
   plans: '/planos',
+  subscriptions: '/matriculas',
   workouts: '/treinos',
   classes: '/aulas',
   attendance: '/frequencia',
