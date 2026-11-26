@@ -1,4 +1,14 @@
-import { Controller, Delete, Get, HttpCode, HttpStatus, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
 import { IdParam } from '../../common/decorators/id-param.decorator.js';
 import { Roles } from '../../common/decorators/roles.decorator.js';
@@ -8,6 +18,7 @@ import { BookingsService } from './bookings.service.js';
 import { BookingResponseDto } from './dto/booking-response.dto.js';
 import { QueryClassesDto } from './dto/query-classes.dto.js';
 import { RosterEntryResponseDto } from './dto/roster-entry-response.dto.js';
+import { UpdateAttendanceDto } from './dto/update-attendance.dto.js';
 
 const CLASS_BOOKINGS = 'classes/:id/bookings';
 
@@ -37,6 +48,18 @@ export class BookingsController {
   async findRoster(@IdParam() classId: string): Promise<RosterEntryResponseDto[]> {
     const bookings = await this.bookingsService.findRoster(classId);
     return bookings.map((booking) => new RosterEntryResponseDto(booking));
+  }
+
+  @Patch(`${CLASS_BOOKINGS}/:bookingId`)
+  @Roles([UserRole.Instructor, UserRole.Admin])
+  async markAttendance(
+    @IdParam() classId: string,
+    @IdParam('bookingId') bookingId: string,
+    @Body() dto: UpdateAttendanceDto,
+  ): Promise<RosterEntryResponseDto> {
+    return new RosterEntryResponseDto(
+      await this.bookingsService.markAttendance(classId, bookingId, dto.attended),
+    );
   }
 
   @Get('bookings/me')

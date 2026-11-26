@@ -12,6 +12,8 @@ const BOOKING_NOT_FOUND = 'Você não está inscrito nesta aula';
 const ALREADY_BOOKED = 'Você já está inscrito nesta aula';
 const CLASS_FULL = 'Não há vagas disponíveis nesta aula';
 const CLASS_ALREADY_STARTED = 'A aula já começou';
+const BOOKING_NOT_IN_CLASS = 'Inscrição não encontrada nesta aula';
+const CLASS_NOT_STARTED = 'A presença só pode ser registrada depois do início da aula';
 
 @Injectable()
 export class BookingsService {
@@ -58,6 +60,29 @@ export class BookingsService {
   async findRoster(classId: string): Promise<ClassBooking[]> {
     await this.classesService.findOne(classId);
     return this.bookingsRepository.findByClass(classId);
+  }
+
+  /** Registra presença ou falta; só faz sentido depois que a aula começou. */
+  async markAttendance(
+    classId: string,
+    bookingId: string,
+    attended: boolean,
+  ): Promise<ClassBooking> {
+    const gymClass = await this.classesService.findOne(classId);
+    if (gymClass.startsAt > this.clock.now()) {
+      throw new ConflictException(CLASS_NOT_STARTED);
+    }
+    const booking = await this.bookingsRepository.setAttendance(classId, bookingId, attended);
+    if (booking === null) {
+      throw new NotFoundException(BOOKING_NOT_IN_CLASS);
+    }
+    return booking;
+  }
+
+  /** Histórico de frequência: só aulas que já começaram contam. */
+  findAttendanceOf(studentId: string, period: DatePeriod): Promise<ClassBooking[]> {
+    assertValidPeriod(period);
+    return this.bookingsRepository.findStartedByStudent(studentId, period, this.clock.now());
   }
 
   private assertNotStarted(gymClass: GymClass): void {

@@ -22,6 +22,8 @@ describe('BookingsService', () => {
     cancel: vi.fn<BookingsRepository['cancel']>(),
     findByStudent: vi.fn<BookingsRepository['findByStudent']>(),
     findByClass: vi.fn<BookingsRepository['findByClass']>(),
+    findStartedByStudent: vi.fn<BookingsRepository['findStartedByStudent']>(),
+    setAttendance: vi.fn<BookingsRepository['setAttendance']>(),
   };
   const classesService = { findOne: vi.fn<ClassesService['findOne']>() };
   const clock: Clock = { now: () => now, today: () => '2026-03-10' };
@@ -123,6 +125,50 @@ describe('BookingsService', () => {
 
       await expect(service.findRoster('c1')).rejects.toBeInstanceOf(NotFoundException);
       expect(repository.findByClass).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('markAttendance', () => {
+    it('registra a presença depois do início da aula', async () => {
+      classesService.findOne.mockResolvedValue(started);
+      repository.setAttendance.mockResolvedValue(booking);
+
+      await expect(service.markAttendance('c1', 'b1', true)).resolves.toBe(booking);
+      expect(repository.setAttendance).toHaveBeenCalledWith('c1', 'b1', true);
+    });
+
+    it('lança 409 antes do início da aula', async () => {
+      classesService.findOne.mockResolvedValue(upcoming);
+
+      await expect(service.markAttendance('c1', 'b1', true)).rejects.toBeInstanceOf(
+        ConflictException,
+      );
+      expect(repository.setAttendance).not.toHaveBeenCalled();
+    });
+
+    it('lança 404 quando a inscrição não é dessa aula', async () => {
+      classesService.findOne.mockResolvedValue(started);
+      repository.setAttendance.mockResolvedValue(null);
+
+      await expect(service.markAttendance('c1', 'b1', false)).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
+    });
+  });
+
+  describe('findAttendanceOf', () => {
+    it('busca só aulas que já começaram, pelo relógio', async () => {
+      repository.findStartedByStudent.mockResolvedValue([]);
+
+      await service.findAttendanceOf('s1', { to: '2026-03-10' });
+
+      expect(repository.findStartedByStudent).toHaveBeenCalledWith('s1', { to: '2026-03-10' }, now);
+    });
+
+    it('lança 400 quando o período está invertido', () => {
+      expect(() =>
+        service.findAttendanceOf('s1', { from: '2026-03-10', to: '2026-03-01' }),
+      ).toThrow(BadRequestException);
     });
   });
 });

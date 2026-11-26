@@ -15,5 +15,6 @@ import { GymClass } from './entities/gym-class.entity.js';
   imports: [TypeOrmModule.forFeature([GymClass, ClassBooking]), UsersModule, ClockModule],
   controllers: [ClassesController, BookingsController],
   providers: [ClassesService, ClassesRepository, BookingsService, BookingsRepository],
+  exports: [BookingsService],
 })
 export class ClassesModule {}

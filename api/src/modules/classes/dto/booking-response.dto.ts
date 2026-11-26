@@ -5,11 +5,13 @@ import { ClassResponseDto } from './class-response.dto.js';
 export class BookingResponseDto {
   readonly id: string;
   readonly bookedAt: Date;
+  readonly attended: boolean | null;
   readonly class: ClassResponseDto;
 
   constructor(booking: ClassBooking) {
     this.id = booking.id;
     this.bookedAt = booking.createdAt;
+    this.attended = booking.attended;
     this.class = new ClassResponseDto(booking.gymClass);
   }
 }
