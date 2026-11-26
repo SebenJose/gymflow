@@ -1,26 +1,55 @@
 @import 'tailwindcss';
 
+/*
+ * Tokens de cor do gymflow — tema único escuro
+ * ("Tema 6 — Azul-grafite + Verde-lima").
+ *
+ * Componentes usam SÓ as classes semânticas (bg-background, bg-surface,
+ * text-foreground, bg-primary, text-primary-foreground, text-muted,
+ * border-border, text-danger, text-success) — nunca hex nem paleta do Tailwind.
+ * `muted`, `border`, `danger` e `success` não vêm da paleta: foram derivados
+ * e checados para contraste WCAG AA (≥ 4.5:1) sobre fundo e card.
+ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+  --background: #222831;
+  --surface: #393e46;
+  --foreground: #fffbe0;
+  --primary: #c6f432;
+  --primary-foreground: #222831;
+  --muted: #bdbcac;
+  --border: color-mix(in srgb, var(--foreground) 15%, transparent);
+  --danger: #ff9090;
+  --success: #4ade80;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-background font-sans text-foreground;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  *,
+  ::before,
+  ::after {
+    @apply border-border;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
 }

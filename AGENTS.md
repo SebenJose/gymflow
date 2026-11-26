@@ -100,15 +100,16 @@ src/
 
 ### Bibliotecas — uma por responsabilidade
 
-| Precisa de…              | Use                                             | Não use                                  |
-| ------------------------ | ----------------------------------------------- | ---------------------------------------- |
-| Estilo                   | Tailwind (classes)                              | `style={{}}`, CSS-in-JS, CSS module novo |
-| Formulário               | React Hook Form + `zodResolver`                 | estado manual por campo                  |
-| Validação                | Zod (schema em `schemas/`)                      | validação ad-hoc em `if`                 |
-| Ícones                   | `lucide-react`                                  | SVG solto, outra lib de ícones           |
-| Animação                 | `motion`                                        | CSS keyframes complexos, outra lib       |
-| Estado global de cliente | Zustand (`stores/`), só se for realmente global | Context para estado que muda muito       |
-| Fonte                    | Geist                                           | —                                        |
+| Precisa de…              | Use                                                                                                                                                                                                                            | Não use                                                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| Estilo                   | Tailwind (classes)                                                                                                                                                                                                             | `style={{}}`, CSS-in-JS, CSS module novo                                                                |
+| Cores                    | tokens semânticos do tema: `bg-background`, `bg-surface`, `text-foreground`, `text-muted`, `bg-primary` + `text-primary-foreground`, `border-border`, `text-danger`, `text-success` (definidos em `front/src/app/globals.css`) | hex solto, paleta padrão do Tailwind (`zinc-*`, `blue-*`…), variantes `dark:` (o tema é único e escuro) |
+| Formulário               | React Hook Form + `zodResolver`                                                                                                                                                                                                | estado manual por campo                                                                                 |
+| Validação                | Zod (schema em `schemas/`)                                                                                                                                                                                                     | validação ad-hoc em `if`                                                                                |
+| Ícones                   | `lucide-react`                                                                                                                                                                                                                 | SVG solto, outra lib de ícones                                                                          |
+| Animação                 | `motion`                                                                                                                                                                                                                       | CSS keyframes complexos, outra lib                                                                      |
+| Estado global de cliente | Zustand (`stores/`), só se for realmente global                                                                                                                                                                                | Context para estado que muda muito                                                                      |
+| Fonte                    | Geist                                                                                                                                                                                                                          | —                                                                                                       |
 
 - Toda chamada HTTP passa pelo cliente em `lib/` (URL base de `NEXT_PUBLIC_API_URL`, token, tratamento de erro padronizado). Nada de `fetch` espalhado nem dados fixos no lugar da API.
 - Acessibilidade mínima: elementos semânticos, `label` em inputs, `alt` em imagens, foco visível.
