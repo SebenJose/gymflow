@@ -54,6 +54,8 @@ docker compose --profile full up --build
 
 ## Padrões e fluxo de trabalho
 
+> Regras obrigatórias de código e de processo (para pessoas e agentes de IA): [`AGENTS.md`](AGENTS.md).
+
 - **Formatação:** Prettier único na raiz (`.prettierrc.json`) para front e api. Use `pnpm format` para formatar e `pnpm format:check` para conferir.
 - **Commits:** [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `chore:`…).
 - **Branches:** a `main` é protegida. Todo trabalho entra por Pull Request, e o merge só é liberado com o CI verde.
