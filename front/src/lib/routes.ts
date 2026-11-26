@@ -5,6 +5,7 @@ export const ROUTES = {
   register: '/cadastro',
   plans: '/planos',
   workouts: '/treinos',
+  classes: '/aulas',
   /** Route Handler que apaga o cookie de um token rejeitado pela API e volta ao login. */
   sessionExpired: '/sessao-expirada',
 } as const;
