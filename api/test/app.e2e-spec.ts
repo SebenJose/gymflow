@@ -12,12 +12,24 @@ describe('AppController (e2e)', () => {
       imports: [AppModule],
     }).compile();
 
-    app = moduleFixture.createNestApplication();
+    app = moduleFixture.createNestApplication({ logger: false });
     await app.init();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer()).get('/').expect(200).expect('Hello World!');
+  it('/ (GET) responde no formato padronizado de sucesso', () => {
+    return request(app.getHttpServer())
+      .get('/')
+      .expect(200)
+      .expect({ success: true, data: 'Hello World!' });
+  });
+
+  it('rota inexistente responde 404 no formato padronizado de erro', async () => {
+    const response = await request(app.getHttpServer()).get('/rota-inexistente').expect(404);
+
+    expect(response.body).toMatchObject({
+      success: false,
+      error: { statusCode: 404, path: '/rota-inexistente' },
+    });
   });
 
   afterEach(async () => {
