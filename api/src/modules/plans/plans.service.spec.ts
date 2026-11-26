@@ -103,6 +103,18 @@ describe('PlansService', () => {
       await expect(service.remove('x')).rejects.toBeInstanceOf(NotFoundException);
     });
 
+    it('lança 409 quando o plano tem matrículas', async () => {
+      repository.delete.mockRejectedValue(
+        new QueryFailedError(
+          'DELETE',
+          [],
+          Object.assign(new Error('violates foreign key'), { code: '23503' }),
+        ),
+      );
+
+      await expect(service.remove('p1')).rejects.toBeInstanceOf(ConflictException);
+    });
+
     it('remove o plano existente', async () => {
       repository.delete.mockResolvedValue(true);
 

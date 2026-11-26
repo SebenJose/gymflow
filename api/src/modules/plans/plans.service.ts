@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { isUniqueViolation } from '../../common/database/is-unique-violation.js';
+import { isForeignKeyViolation, isUniqueViolation } from '../../common/database/postgres-errors.js';
 import type { AuthUser } from '../../common/types/auth-user.type.js';
 import { UserRole } from '../../common/types/user-role.js';
 import type { CreatePlanDto } from './dto/create-plan.dto.js';
@@ -14,6 +14,7 @@ import { PlansRepository } from './plans.repository.js';
 
 const PLAN_NOT_FOUND_MESSAGE = 'Plano não encontrado';
 const DUPLICATE_NAME_MESSAGE = 'Já existe um plano com esse nome';
+const PLAN_IN_USE_MESSAGE = 'O plano possui matrículas e não pode ser removido; desative-o';
 
 @Injectable()
 export class PlansService {
@@ -48,8 +49,14 @@ export class PlansService {
     return plan;
   }
 
+  /** A FK com RESTRICT impede, no banco, apagar plano que tenha matrículas. */
   async remove(id: string): Promise<void> {
-    const removed = await this.plansRepository.delete(id);
+    let removed: boolean;
+    try {
+      removed = await this.plansRepository.delete(id);
+    } catch (error) {
+      throw isForeignKeyViolation(error) ? new ConflictException(PLAN_IN_USE_MESSAGE) : error;
+    }
     if (!removed) {
       throw new NotFoundException(PLAN_NOT_FOUND_MESSAGE);
     }
