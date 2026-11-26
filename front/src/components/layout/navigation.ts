@@ -16,6 +16,6 @@ const PLANS: NavItem = { href: ROUTES.plans, label: 'Planos', icon: CreditCard }
 /** Itens da barra lateral por papel; cada tela nova entra aqui junto com a rota. */
 export const NAVIGATION: Record<UserRole, readonly NavItem[]> = {
   student: [HOME, WORKOUTS, CLASSES, ATTENDANCE, PLANS],
-  instructor: [HOME, CLASSES],
-  admin: [HOME, CLASSES],
+  instructor: [HOME, WORKOUTS, CLASSES],
+  admin: [HOME, WORKOUTS, CLASSES],
 };
