@@ -1,3 +1,5 @@
+> Antes deste arquivo, leia as regras gerais do repositório em [`../AGENTS.md`](../AGENTS.md).
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
