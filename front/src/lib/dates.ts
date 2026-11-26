@@ -58,3 +58,11 @@ const dayLabelFormatter = new Intl.DateTimeFormat('pt-BR', {
 export function formatDayLabel(isoDate: string): string {
   return dayLabelFormatter.format(new Date(`${isoDate}T12:00:00Z`));
 }
+
+/** Offset fixo de São Paulo (sem horário de verão desde 2019). */
+const BUSINESS_UTC_OFFSET = '-03:00';
+
+/** Dia `YYYY-MM-DD` + hora `HH:mm` no fuso da academia → ISO com offset, como a API exige. */
+export function toBusinessDateTime(isoDate: string, time: string): string {
+  return `${isoDate}T${time}:00${BUSINESS_UTC_OFFSET}`;
+}

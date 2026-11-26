@@ -1,6 +1,6 @@
 import { Plus } from 'lucide-react';
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { LinkButton } from '@/components/ui/link-button';
 import { PageHeader } from '@/components/ui/page-header';
 import { requireUser } from '@/features/auth';
 import {
@@ -44,13 +44,10 @@ export default async function WorkoutsPage({ searchParams }: PageProps<'/treinos
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <PageHeader title="Fichas de treino" description="Fichas montadas para os alunos." />
-        <Link
-          href={`${ROUTES.workouts}/nova`}
-          className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:opacity-90"
-        >
+        <LinkButton href={`${ROUTES.workouts}/nova`}>
           <Plus className="size-4" aria-hidden />
           Nova ficha
-        </Link>
+        </LinkButton>
       </div>
       <StudentFilter students={students} selected={studentId} />
       <StaffWorkoutList workouts={workouts} />
