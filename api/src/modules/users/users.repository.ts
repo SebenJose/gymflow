@@ -1,14 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import type { UserRole } from '../../common/types/user-role.js';
 import { type NewUser, User } from './entities/user.entity.js';
 
 @Injectable()
 export class UsersRepository {
   constructor(@InjectRepository(User) private readonly repository: Repository<User>) {}
 
-  findAll(): Promise<User[]> {
-    return this.repository.find({ order: { createdAt: 'ASC' } });
+  findAll(role?: UserRole): Promise<User[]> {
+    return this.repository.find({
+      where: role === undefined ? {} : { role },
+      order: { name: 'ASC' },
+    });
   }
 
   findById(id: string): Promise<User | null> {

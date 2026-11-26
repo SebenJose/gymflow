@@ -11,6 +11,7 @@ import { AuthModule } from './modules/auth/auth.module.js';
 import { PlansModule } from './modules/plans/plans.module.js';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module.js';
 import { UsersModule } from './modules/users/users.module.js';
+import { WorkoutsModule } from './modules/workouts/workouts.module.js';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UsersModule } from './modules/users/users.module.js';
     AuthModule,
     PlansModule,
     SubscriptionsModule,
+    WorkoutsModule,
   ],
   controllers: [AppController],
   providers: [

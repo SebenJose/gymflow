@@ -1,4 +1,4 @@
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { QueryFailedError } from 'typeorm';
 import { UserRole } from '../../common/types/user-role.js';
 import type { NewUser, User } from './entities/user.entity.js';
@@ -15,6 +15,7 @@ describe('UsersService', () => {
   const repository = {
     create: vi.fn<UsersRepository['create']>(),
     findById: vi.fn<UsersRepository['findById']>(),
+    findAll: vi.fn<UsersRepository['findAll']>(),
   };
   // Só os métodos exercitados pelos testes são mockados.
   const service = new UsersService(repository as unknown as UsersRepository);
@@ -48,5 +49,38 @@ describe('UsersService', () => {
     repository.findById.mockResolvedValue(user);
 
     await expect(service.findById('u1')).resolves.toBe(user);
+  });
+
+  describe('findAll', () => {
+    const admin = { id: 'a1', role: UserRole.Admin };
+    const instructor = { id: 'i1', role: UserRole.Instructor };
+
+    it('admin lista com o filtro pedido', async () => {
+      repository.findAll.mockResolvedValue([]);
+
+      await service.findAll(admin, UserRole.Instructor);
+
+      expect(repository.findAll).toHaveBeenCalledWith(UserRole.Instructor);
+    });
+
+    it('admin sem filtro lista todos os papéis', async () => {
+      repository.findAll.mockResolvedValue([]);
+
+      await service.findAll(admin);
+
+      expect(repository.findAll).toHaveBeenCalledWith(undefined);
+    });
+
+    it('instrutor só recebe alunos, mesmo sem filtro', async () => {
+      repository.findAll.mockResolvedValue([]);
+
+      await service.findAll(instructor);
+
+      expect(repository.findAll).toHaveBeenCalledWith(UserRole.Student);
+    });
+
+    it('lança 403 quando o instrutor pede outro papel', () => {
+      expect(() => service.findAll(instructor, UserRole.Admin)).toThrow(ForbiddenException);
+    });
   });
 });
