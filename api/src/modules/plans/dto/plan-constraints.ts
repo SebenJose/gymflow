@@ -1,0 +1,3 @@
+export const PLAN_NAME_MAX_LENGTH = 80;
+export const PLAN_DESCRIPTION_MAX_LENGTH = 500;
+export const PLAN_MAX_DURATION_MONTHS = 24;
