@@ -1,0 +1,24 @@
+{
+  "name": "gymflow",
+  "private": true,
+  "description": "Sistema de gestão para redes de academias — planos, fichas de treino, aulas coletivas e frequência.",
+  "packageManager": "pnpm@12.10.1",
+  "scripts": {
+    "dev": "pnpm --parallel --filter @gymflow/front --filter @gymflow/api run dev:app",
+    "dev:front": "pnpm --filter @gymflow/front dev",
+    "dev:api": "pnpm --filter @gymflow/api start:dev",
+    "build": "pnpm -r run build",
+    "lint": "pnpm -r run lint",
+    "test": "pnpm -r run test",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "seed": "pnpm --filter @gymflow/api seed",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "pnpm -r run typecheck"
+  },
+  "devDependencies": {
+    "prettier": "^3.10.1",
+    "prettier-plugin-tailwindcss": "^0.8.1"
+  }
+}

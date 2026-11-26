@@ -1,0 +1,55 @@
+Tema 7 – SISTEMA DE GESTÃO PARA ACADEMIAS
+
+Contextualização do Problema
+
+Uma rede de academias deseja desenvolver um aplicativo próprio para modernizar o
+gerenciamento de suas unidades e melhorar a experiência dos alunos. Atualmente, o
+controle de matrículas, planos de assinatura, agendamentos de aulas e acompanhamento de
+treinos é realizado por diferentes ferramentas, dificultando a organização das informações e
+a comunicação entre alunos e profissionais.
+O sistema deverá atender alunos, instrutores e administradores, permitindo o
+gerenciamento de planos, acompanhamento de atividades físicas, agendamento de aulas e
+controle de frequência, além de facilitar a administração dos serviços oferecidos pela
+academia.
+
+REQUISITOS FUNCIONAIS
+1 - Alunos devem realizar cadastro e autenticação no sistema.
+2 - Alunos devem consultar e contratar planos de assinatura disponíveis.
+3 - Alunos devem visualizar suas fichas de treino cadastradas pelos instrutores.
+4 - Instrutores devem cadastrar, editar e atualizar fichas de treino dos alunos.
+5 - Alunos devem agendar e cancelar participações em aulas coletivas.
+6 - O sistema deve controlar automaticamente a quantidade de vagas disponíveis nas aulas.
+7 - Alunos devem registrar a conclusão dos exercícios previstos em suas fichas de treino.
+8 - Administradores devem gerenciar planos, mensalidades e situação das matrículas.
+9 - O sistema deve permitir que alunos consultem seu histórico de frequência e atividades
+realizadas.
+
+Stack: front/back
+para o front Next + React, tailwindcss, react hoock forms + zod, motion para animações, zustand se for necessario, lucide react para padronização de icones, organização de telas podemos seguir algo parecido com a geizis da vercel, e organização de pastas Feature Based
+
+back: NestJS + TypeORM + podemos suar o postgres rodando em container assim dividimos front e back em um monorepo e dockerizamos
+
+
+
+API REST: rotas que atendam ao front-end, com métodos HTTP, parâmetros, query params e status codes adequados.
+
+Validação e erros: DTOs com class-validator, um middleware de log e respostas padronizadas de sucesso e de erro (interceptor e filtro global).
+
+Arquitetura: separação em controller, service e repository, com as regras de negócio no service.
+
+Banco de dados: persistência em SQLite com TypeORM, entidades com relacionamentos e um seed com dados de exemplo.
+
+CRUD: Create, Read, Update e Delete para as principais entidades.
+
+Autenticação e segurança:
+
+    cadastro e login com senha em hash (bcrypt);
+
+    token JWT;
+
+    rotas privadas protegidas por Guard (401);
+
+    pelo menos uma rota restrita por papel de usuário (403).
+
+Integração: o front-end deve consumir a API no lugar de dados fixos.
+

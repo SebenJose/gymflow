@@ -1,0 +1,8 @@
+packages:
+  - front
+  - api
+
+allowBuilds:
+  bcrypt: true
+  sharp: false
+  unrs-resolver: false

@@ -1,0 +1,52 @@
+name: gymflow
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-gymflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-gymflow}
+      POSTGRES_DB: ${POSTGRES_DB:-gymflow}
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    environment:
+      PORT: 3333
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-gymflow}:${POSTGRES_PASSWORD:-gymflow}@db:5432/${POSTGRES_DB:-gymflow}
+      JWT_SECRET: ${JWT_SECRET:-troque-este-segredo}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1d}
+      WEB_URL: http://localhost:3000
+    ports:
+      - '3333:3333'
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles: ['full']
+
+  front:
+    build:
+      context: .
+      dockerfile: front/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3333/api
+    ports:
+      - '3000:3000'
+    depends_on:
+      - api
+    profiles: ['full']
+
+volumes:
+  pgdata:
