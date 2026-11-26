@@ -32,6 +32,10 @@ export class ClassBooking {
   @JoinColumn({ name: 'student_id' })
   student: Relation<User>;
 
+  /** Presença registrada pela equipe depois do início da aula; nulo enquanto não registrada. */
+  @Column({ type: 'boolean', nullable: true })
+  attended: boolean | null;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 }

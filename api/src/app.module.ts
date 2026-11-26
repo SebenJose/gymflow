@@ -7,6 +7,7 @@ import { AppService } from './app.service.js';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter.js';
 import { ResponseEnvelopeInterceptor } from './common/interceptors/response-envelope.interceptor.js';
 import { RequestLoggerMiddleware } from './common/middleware/request-logger.middleware.js';
+import { AttendanceModule } from './modules/attendance/attendance.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { ClassesModule } from './modules/classes/classes.module.js';
 import { PlansModule } from './modules/plans/plans.module.js';
@@ -32,6 +33,7 @@ import { WorkoutsModule } from './modules/workouts/workouts.module.js';
     SubscriptionsModule,
     WorkoutsModule,
     ClassesModule,
+    AttendanceModule,
   ],
   controllers: [AppController],
   providers: [

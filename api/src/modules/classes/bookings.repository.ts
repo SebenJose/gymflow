@@ -62,6 +62,37 @@ export class BookingsRepository {
     return whereStartsWithin(query, 'gymClass', period).getMany();
   }
 
+  /** Inscrições do aluno em aulas que já começaram, das mais recentes para as mais antigas. */
+  findStartedByStudent(
+    studentId: string,
+    period: DatePeriod,
+    startedBy: Date,
+  ): Promise<ClassBooking[]> {
+    const query = this.dataSource
+      .getRepository(ClassBooking)
+      .createQueryBuilder('booking')
+      .innerJoinAndSelect('booking.gymClass', 'gymClass')
+      .leftJoinAndSelect('gymClass.instructor', 'instructor')
+      .where('booking.studentId = :studentId', { studentId })
+      .andWhere('gymClass.startsAt <= :startedBy', { startedBy })
+      .orderBy('gymClass.startsAt', 'DESC');
+    return whereStartsWithin(query, 'gymClass', period).getMany();
+  }
+
+  /** Retorna a inscrição atualizada, ou `null` se ela não for dessa aula. */
+  async setAttendance(
+    classId: string,
+    bookingId: string,
+    attended: boolean,
+  ): Promise<ClassBooking | null> {
+    const repository = this.dataSource.getRepository(ClassBooking);
+    const result = await repository.update({ id: bookingId, classId }, { attended });
+    if ((result.affected ?? 0) === 0) {
+      return null;
+    }
+    return repository.findOne({ where: { id: bookingId }, relations: { student: true } });
+  }
+
   findByClass(classId: string): Promise<ClassBooking[]> {
     return this.dataSource.getRepository(ClassBooking).find({
       where: { classId },

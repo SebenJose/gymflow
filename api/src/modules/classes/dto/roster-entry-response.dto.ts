@@ -4,11 +4,13 @@ import type { ClassBooking } from '../entities/class-booking.entity.js';
 export class RosterEntryResponseDto {
   readonly id: string;
   readonly bookedAt: Date;
+  readonly attended: boolean | null;
   readonly student: { id: string; name: string; email: string };
 
   constructor(booking: ClassBooking) {
     this.id = booking.id;
     this.bookedAt = booking.createdAt;
+    this.attended = booking.attended;
     this.student = {
       id: booking.student.id,
       name: booking.student.name,
