@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { isUniqueViolation } from '../../common/database/is-unique-violation.js';
+import { isUniqueViolation } from '../../common/database/postgres-errors.js';
 import type { NewUser, User } from './entities/user.entity.js';
 import { UsersRepository } from './users.repository.js';
 

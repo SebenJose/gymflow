@@ -9,6 +9,7 @@ import { ResponseEnvelopeInterceptor } from './common/interceptors/response-enve
 import { RequestLoggerMiddleware } from './common/middleware/request-logger.middleware.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { PlansModule } from './modules/plans/plans.module.js';
+import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module.js';
 import { UsersModule } from './modules/users/users.module.js';
 
 @Module({
@@ -26,6 +27,7 @@ import { UsersModule } from './modules/users/users.module.js';
     UsersModule,
     AuthModule,
     PlansModule,
+    SubscriptionsModule,
   ],
   controllers: [AppController],
   providers: [
