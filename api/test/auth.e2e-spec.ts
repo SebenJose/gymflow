@@ -1,56 +1,20 @@
 import { INestApplication } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import request, { type Response } from 'supertest';
+import request from 'supertest';
 import { App } from 'supertest/types.js';
-import { DataSource } from 'typeorm';
-import { AppModule } from '../src/app.module.js';
 import { UserRole } from '../src/common/types/user-role.js';
-import { PasswordHasher } from '../src/modules/auth/password-hasher.js';
-import { User } from '../src/modules/users/entities/user.entity.js';
+import { ADMIN, bodyOf, createE2eApp, login as loginAs } from './support/e2e-app.js';
 
 const STUDENT = { name: 'Ana Aluna', email: 'ana@gymflow.dev', password: 'senha-forte-123' };
-const ADMIN = { name: 'Admin', email: 'admin@gymflow.dev', password: 'senha-admin-123' };
-
-type ResponseBody = {
-  success: boolean;
-  data: Record<string, unknown> & { accessToken?: unknown; user?: unknown };
-  error: { statusCode: number; details?: string[] };
-};
-
-// O supertest tipa o corpo como `any`; aqui ele é lido no formato do envelope da API.
-function bodyOf(response: Response): ResponseBody {
-  return response.body as ResponseBody;
-}
 
 describe('Auth e usuários (e2e)', () => {
   let app: INestApplication<App>;
 
-  async function login(email: string, password: string): Promise<string> {
-    const response = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({ email, password })
-      .expect(200);
-    const token: unknown = bodyOf(response).data.accessToken;
-    if (typeof token !== 'string') {
-      throw new Error('login sem accessToken');
-    }
-    return token;
+  function login(email: string, password: string): Promise<string> {
+    return loginAs(app, { email, password });
   }
 
   beforeAll(async () => {
-    const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
-    app = moduleRef.createNestApplication({ logger: false });
-    await app.init();
-
-    const dataSource = app.get(DataSource);
-    await dataSource.query('TRUNCATE TABLE users CASCADE');
-    // Não há cadastro público de admin, então ele é inserido direto no banco.
-    await dataSource.getRepository(User).save({
-      name: ADMIN.name,
-      email: ADMIN.email,
-      passwordHash: await app.get(PasswordHasher).hash(ADMIN.password),
-      role: UserRole.Admin,
-    });
+    app = await createE2eApp();
   });
 
   afterAll(async () => {
