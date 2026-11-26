@@ -33,11 +33,16 @@ export async function createE2eApp(): Promise<INestApplication<App>> {
   const app = moduleRef.createNestApplication<INestApplication<App>>({ logger: false });
   await app.init();
 
+  await truncateAll(app);
+  await createStaffUser(app, ADMIN, UserRole.Admin);
+  return app;
+}
+
+/** Esvazia todas as tabelas das entidades. */
+export async function truncateAll(app: INestApplication<App>): Promise<void> {
   const dataSource = app.get(DataSource);
   const tables = dataSource.entityMetadatas.map((entity) => `"${entity.tableName}"`).join(', ');
   await dataSource.query(`TRUNCATE TABLE ${tables} CASCADE`);
-  await createStaffUser(app, ADMIN, UserRole.Admin);
-  return app;
 }
 
 /** Cria instrutor ou admin direto no banco, já que o cadastro público só cria alunos. */

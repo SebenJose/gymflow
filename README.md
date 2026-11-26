@@ -46,6 +46,18 @@ pnpm db:up          # sobe o Postgres
 pnpm dev            # front em :3000 e api em :3333/api
 ```
 
+### Dados de exemplo
+
+Com o banco vazio, `pnpm seed` cria planos, matrículas com mensalidades (pagas, pendentes e uma em atraso), fichas de treino, exercícios concluídos, aulas passadas e futuras (uma lotada) e presenças registradas. As datas são relativas ao dia em que o seed roda. Se o banco já tiver usuários, o seed não altera nada.
+
+Senha de todos os usuários: `gymflow123`.
+
+| Papel     | E-mails                                                                                                               |
+| --------- | --------------------------------------------------------------------------------------------------------------------- |
+| Admin     | `admin@gymflow.dev`                                                                                                   |
+| Instrutor | `carla@gymflow.dev`, `rafael@gymflow.dev`                                                                             |
+| Aluno     | `ana@gymflow.dev`, `bruno@gymflow.dev`, `carol@gymflow.dev` (matrícula suspensa), `diego@gymflow.dev` (sem matrícula) |
+
 Stack inteira em containers:
 
 ```bash
